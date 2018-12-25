@@ -46,6 +46,8 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- You can omit this part if you are running with JDK version 1.9 or lower Begins from here-->
 		<dependency>
 		    <groupId>javax.xml.bind</groupId>
 		    <artifactId>jaxb-api</artifactId>
@@ -65,9 +67,11 @@
 		    <artifactId>activation</artifactId>
 		    <version>1.1.1</version>
 		</dependency>
+		<!--  Till here  -->
     </dependencies>
 
     <properties>
+    <!-- Here you can see my java version is 1.8 but actually installed JDK version on my machine is 1.10 So I must need to include jaxb libraries.-->
         <java.version>1.8</java.version>
     </properties>
 

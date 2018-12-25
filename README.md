@@ -31,7 +31,12 @@ I have additionaly added the following library in POM. you can remove that file 
  2. JWT (0.9.0)
  3. Mysql
  4. Java 1.8
-## Similar Post
+
+To run this project you just need to import this project as Existing Maven project and then wait untill all dependecies are downloaded.
+
+You can see POM.xml with java version is 1.8 But project will considered installed JDK version on machine so if it is >=1.10 So we must need to include jaxb libraries as given above.
+
+
 
 
 
