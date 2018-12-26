@@ -1,4 +1,4 @@
-package com.smart.sales.manager.dao;
+package com.smart.sales.manager.repository;
 
 
 import java.util.List;

@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.smart.sales.manager.dao.RoleRepository;
-import com.smart.sales.manager.dao.UserDao;
 import com.smart.sales.manager.model.Role;
 import com.smart.sales.manager.model.User;
 import com.smart.sales.manager.model.UserDto;
+import com.smart.sales.manager.repository.RoleRepository;
+import com.smart.sales.manager.repository.UserRepository;
 import com.smart.sales.manager.service.UserService;
 
 import java.util.*;
@@ -23,7 +23,7 @@ import java.util.*;
 public class UserServiceImpl implements UserDetailsService, UserService {
 	
 	@Autowired
-	private UserDao userDao;
+	private UserRepository userRepository;
 	
 	@Autowired
 	 private RoleRepository roleRepository;
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private BCryptPasswordEncoder bcryptEncoder;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userDao.findByUsername(username);
+		User user = userRepository.findByUsername(username);
 		if(user == null){
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
@@ -51,23 +51,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	public List<User> findAll() {
 		List<User> list = new ArrayList<>();
-		userDao.findAll().iterator().forEachRemaining(list::add);
+		userRepository.findAll().iterator().forEachRemaining(list::add);
 		return list;
 	}
 
 	@Override
 	public void delete(long id) {
-		userDao.deleteById(id);
+		userRepository.deleteById(id);
 	}
 
 	@Override
 	public User findOne(String username) {
-		return userDao.findByUsername(username);
+		return userRepository.findByUsername(username);
 	}
 
 	@Override
 	public User findById(long id) {
-		return userDao.findById(id).get();
+		return userRepository.findById(id).get();
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		List<Role> userRole = roleRepository.findAllById(user.getRole_ids());
 		newUser.setRoles(userRole);
 		newUser.setSalary(user.getSalary());
-        return userDao.save(newUser);
+        return userRepository.save(newUser);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             BeanUtils.copyProperties(userDto, user, "password","username","id");
             List<Role> userRole = roleRepository.findAllById(userDto.getRole_ids());
             user.setRoles(userRole);
-            return userDao.save(user);
+            return userRepository.save(user);
         }
         return user;
     }
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = findOne(username);
         if(user != null) {
             BeanUtils.copyProperties(userDto, user, "password","username","id");
-            return userDao.save(user);
+            return userRepository.save(user);
         }
         return user;
     }

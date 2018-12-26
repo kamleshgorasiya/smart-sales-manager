@@ -1,4 +1,4 @@
-package com.smart.sales.manager.dao;
+package com.smart.sales.manager.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.smart.sales.manager.model.User;
 
 @Repository
-public interface UserDao extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 	User findByUsername(String username);
 }
+

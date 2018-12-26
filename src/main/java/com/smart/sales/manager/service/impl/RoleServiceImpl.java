@@ -2,21 +2,10 @@ package com.smart.sales.manager.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.smart.sales.manager.dao.RoleRepository;
-import com.smart.sales.manager.dao.UserDao;
 import com.smart.sales.manager.model.Role;
-import com.smart.sales.manager.model.User;
-import com.smart.sales.manager.model.UserDto;
+import com.smart.sales.manager.repository.RoleRepository;
 import com.smart.sales.manager.service.RoleService;
-import com.smart.sales.manager.service.UserService;
-
 import java.util.*;
 
 

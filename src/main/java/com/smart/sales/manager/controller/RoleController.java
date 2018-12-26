@@ -35,10 +35,10 @@ public class RoleController {
         return new ApiResponse<>(HttpStatus.OK.value(), "User roles fetched successfully.",roleService.findAll());
     }
     
-    @GetMapping("/role")
+    @GetMapping("/role/{name}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<User> getyProfile(@RequestBody String rolename){
-        return new ApiResponse<>(HttpStatus.OK.value(), "User role fetched successfully.",roleService.findByName(rolename));
+    public ApiResponse<User> getyProfile(@RequestBody String name){
+        return new ApiResponse<>(HttpStatus.OK.value(), "User role fetched successfully.",roleService.findByName(name));
     }
     
     @GetMapping("/role/{id}")
