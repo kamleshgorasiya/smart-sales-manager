@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -54,12 +55,24 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		ErrorDetails errorDetails = new ErrorDetails(new Date(),message,"Request parameter is not following all constaint",HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
+	
+	/**
+	 * 
+	 * @param ex
+	 * @param request
+	 * @return ResponseEntity
+	 */
 	@ExceptionHandler(AccessDeniedException.class)
 	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(AccessDeniedException ex, WebRequest request) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"You are not authorise to access these resources",HttpStatus.FORBIDDEN.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
 	}
-		
+	
+	@ExceptionHandler(EmptyResultDataAccessException.class)
+	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(EmptyResultDataAccessException ex, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"Resources is not availabel which you trying to delete",HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
 	
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex, WebRequest request) {

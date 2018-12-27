@@ -2,6 +2,7 @@ package com.smart.sales.manager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -64,7 +65,8 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> delete(@RequestHeader(name="Accept-language",required=false) Locale locale, @PathVariable int id) {
-        userService.delete(id);
+        
+    	userService.delete(id);
         return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.deleted", null, locale), null);
     }
 

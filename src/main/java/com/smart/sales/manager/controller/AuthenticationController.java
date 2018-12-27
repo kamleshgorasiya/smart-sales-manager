@@ -1,4 +1,4 @@
-package com.smart.sales.manager.controller;
+ package com.smart.sales.manager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +12,6 @@ import com.smart.sales.manager.config.TokenProvider;
 import com.smart.sales.manager.model.ApiResponse;
 import com.smart.sales.manager.model.AuthToken;
 import com.smart.sales.manager.model.LoginUser;
-import com.smart.sales.manager.service.UserService;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,9 +24,6 @@ public class AuthenticationController {
 
     @Autowired
     private TokenProvider jwtTokenUtil;
-
-    @Autowired
-    private UserService userService;
 
     @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
     public ApiResponse<AuthToken> login(@RequestBody LoginUser loginUser) throws AuthenticationException {
