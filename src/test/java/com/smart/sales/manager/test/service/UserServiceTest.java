@@ -9,6 +9,13 @@ import com.smart.sales.manager.service.UserService;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * 
+ * @author kamlesh
+ * @Date: 26-Dec-2018
+ * @Gitrepo :
+ */
+
 public class UserServiceTest {
 
 

@@ -2,30 +2,58 @@ package com.smart.sales.manager.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 public class User {
 
-	@Column
+	@Column(length=50, nullable=false)
+    @Size(min = 1, max = 50)
 	private String firstName;
-	@Column
+	
+	
+    @Size(min = 1, max = 50)
+	@Column(length=50, nullable=false)
 	private String lastName;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-
-	@Column(unique = true)
+ 
+	@Column(unique = true,length=50, nullable=false)
+	@Size(min = 1, message="", max = 50)
 	private String username;
-	@Column
+	
+	
 	@JsonIgnore
+    @Size(min = 1, max = 255)
+	@Column(length=50, nullable=false)
 	private String password;
-	@Column
+	
+	@Column(length=50, nullable=false)
+	@Min(value = 15000, message = "The salary must not be less than 15000")
+	@Max(value = 100000, message = "The salary must be greator than 100000")
 	private long salary;
-	@Column
+	
+	@Column(length=50, nullable=false)
+	@Min(value = 15, message = "The age must not be less than 15 Years")
+	@Max(value = 100, message = "The age must not greator than 100 Years")
 	private int age;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

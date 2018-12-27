@@ -1,20 +1,31 @@
 package com.smart.sales.manager.model;
 
 import java.util.Date;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 
 public class ErrorDetails {
 	private Date timestamp;
 	private String message;
 	private String details;
-	private String status;
+	private int status;
 
+	
 	public ErrorDetails(Date timestamp, String message, String details) {
 		super();
 		this.timestamp = timestamp;
 		this.message = message;
 		this.details = details;
+		
 	}
-
+	public ErrorDetails(Date date, String message, String description, int status) {
+		super();
+		this.timestamp = date;
+		this.message = message;
+		this.details = description;
+		this.status=status;
+	}
 	public Date getTimestamp() {
 		return timestamp;
 	}
@@ -27,20 +38,19 @@ public class ErrorDetails {
 		return details;
 	}
 
+	
 	/**
 	 * @return the status
 	 */
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
-
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
-
 	/**
 	 * @param timestamp the timestamp to set
 	 */
@@ -62,4 +72,5 @@ public class ErrorDetails {
 		this.details = details;
 	}
 
+	
 }
