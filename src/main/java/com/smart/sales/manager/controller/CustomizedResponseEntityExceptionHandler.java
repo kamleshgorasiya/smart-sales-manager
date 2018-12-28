@@ -12,6 +12,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +50,16 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		ErrorDetails errorDetails = new ErrorDetails(new Date(),message,"Request parameter is not following all constaint",HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(TransactionSystemException.class)
+	public final ResponseEntity<ErrorDetails> handleContraintNotSatified(TransactionSystemException ex,
+			WebRequest request) {	
+		Throwable trThrowable=ex.getMostSpecificCause();
+		if(trThrowable instanceof ConstraintViolationException)
+			return handleContraintNotSatified(((ConstraintViolationException) trThrowable), request);
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),trThrowable.getMessage(),"Request parameter is not following all constaint",HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public final ResponseEntity<ErrorDetails> handleContraintNotSatified(DataIntegrityViolationException ex,
 			WebRequest request) {	
@@ -72,6 +84,11 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(EmptyResultDataAccessException ex, WebRequest request) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"Resources is not availabel which you trying to delete",HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler(BadCredentialsException.class)
+	public final ResponseEntity<ErrorDetails> handleBadCredentails(BadCredentialsException ex, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false),HttpStatus.UNAUTHORIZED.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
 	}
 	
 	@ExceptionHandler(Exception.class)

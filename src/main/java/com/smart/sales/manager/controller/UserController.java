@@ -27,11 +27,16 @@ public class UserController {
     private MessageSource messageSource;
   
     @PostMapping(value="/signup")
+    public ApiResponse<User> signup(@RequestHeader(name="Accept-language",required=false) Locale locale, @RequestBody UserDto user){
+    
+        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
+    }
+    @PostMapping(value="/users")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<User> saveUser(@RequestHeader(name="Accept-language",required=false) Locale locale, @RequestBody UserDto user){
     
         return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
     }
-    
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="/users")
     public ApiResponse<List<User>> listUser(@RequestHeader(name="Accept-language",required=false) Locale locale){
