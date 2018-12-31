@@ -12,10 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 
 import java.util.List;
 
@@ -23,42 +26,69 @@ import java.util.List;
 @Entity
 public class User {
 
+	@Column	
+	private boolean is_active;
+	
+	@Column	
+	private boolean is_mobile_verified;
+	
+	@Column
+	private boolean is_email_verified;
+	
 	@Column(length=50, nullable=false)
-    @Size(min = 1, max = 50)
+    @Size(min = 2, max = 64, message="length.twoto64")
+	@NotNull(message = "notempty")
 	private String firstName;
 	
 	
-    @Size(min = 1, max = 50)
+    @Size(min = 2, max = 64, message="length.twoto64")
 	@Column(length=50, nullable=false)
+    @NotNull(message = "notempty")
 	private String lastName;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
  
-	@Column(unique = true,length=50, nullable=false)
-	@Size(min = 1, message="", max = 50)
+	@Column(unique = true,length=64, nullable=false)
+	@Size(min = 2, max = 64, message="length.twoto64")
+	@NotNull(message = "notempty")
 	private String username;
+	
+	@Column(unique = true,length=64, nullable=false)
+	@Size(min = 1, max = 64, message="length.twoto64")
+	@NotEmpty(message = "notempty")
+	@Email(message = "valid.format")
+	private String email;
+	
+	@Column(unique = true,length=14, nullable=false)
+	@Size(min = 8, max = 14, message="length.eightto14")
+	@NotNull(message = "notempty")
+	private String mobile;
 	
 	
 	@JsonIgnore
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 255, message="length.eightto64")
 	@Column(length=50, nullable=false)
+	@NotNull(message = "notempty")
 	private String password;
 	
 	@Column(length=50, nullable=false)
-	@Min(value = 15000, message = "The salary must not be less than 15000")
-	@Max(value = 100000, message = "The salary must be greator than 100000")
+	@Min(value = 15000, message = "min.salary")
+	@Max(value = 100000, message = "max.salary")
+	@NotNull(message = "notempty")
 	private long salary;
 	
 	@Column(length=50, nullable=false)
-	@Min(value = 15, message = "The age must not be less than 15 Years")
-	@Max(value = 100, message = "The age must not greator than 100 Years")
+	@Min(value = 15, message = "min.age")
+	@Max(value = 100, message = "max.age")
+	@NotNull(message = "notempty")
 	private int age;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_ROLES", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "ROLE_ID") })
+	@JsonIgnore
 	private List<Role> roles;
 
 	public long getId() {
@@ -136,4 +166,76 @@ public class User {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
+
+	/**
+	 * @return the is_active
+	 */
+	public boolean isIs_active() {
+		return is_active;
+	}
+
+	/**
+	 * @param is_active the is_active to set
+	 */
+	public void setIs_active(boolean is_active) {
+		this.is_active = is_active;
+	}
+
+	/**
+	 * @return the is_mobile_verified
+	 */
+	public boolean isIs_mobile_verified() {
+		return is_mobile_verified;
+	}
+
+	/**
+	 * @param is_mobile_verified the is_mobile_verified to set
+	 */
+	public void setIs_mobile_verified(boolean is_mobile_verified) {
+		this.is_mobile_verified = is_mobile_verified;
+	}
+
+	/**
+	 * @return the is_email_verified
+	 */
+	public boolean isIs_email_verified() {
+		return is_email_verified;
+	}
+
+	/**
+	 * @param is_email_verified the is_email_verified to set
+	 */
+	public void setIs_email_verified(boolean is_email_verified) {
+		this.is_email_verified = is_email_verified;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the mobile
+	 */
+	public String getMobile() {
+		return mobile;
+	}
+
+	/**
+	 * @param mobile the mobile to set
+	 */
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	
+	
 }

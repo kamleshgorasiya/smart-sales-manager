@@ -3,10 +3,11 @@ package com.smart.sales.manager.controller;
 import java.util.Date;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-
+import java.util.Set;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import com.smart.sales.manager.model.ErrorDetails;
 import com.smart.sales.manager.model.ResourceNotFoundException;
 
@@ -28,26 +28,29 @@ import com.smart.sales.manager.model.ResourceNotFoundException;
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	
-	@ExceptionHandler(ResourceNotFoundException.class)
-	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(ResourceNotFoundException ex,
-			WebRequest request) {
-		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-	}
-	@ExceptionHandler(NoSuchElementException.class)
-	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(NoSuchElementException ex,
-			WebRequest request) {
-		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false),HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-	}
+	@Autowired
+	private MessageSource messageSource;
 	
+	private String processFieldErrors(Set<ConstraintViolation<?>> exs, Locale currentLocale) {
+			StringBuilder stringBuilder =new StringBuilder();
+		for(ConstraintViolation<?> constraintViolation:exs) {
+			if(constraintViolation != null) {
+				String[] propertyname=  {constraintViolation.getPropertyPath().toString()};	
+				String message=messageSource.getMessage(constraintViolation.getMessage(),propertyname,currentLocale);
+				stringBuilder.append(message).append("<br/>");
+			}else {
+				constraintViolation=null;
+			}
+		}
+		return stringBuilder.toString();
+    }
+ 
+    
 	@ExceptionHandler(ConstraintViolationException.class)
 	public final ResponseEntity<ErrorDetails> handleContraintNotSatified(ConstraintViolationException ex,
 			WebRequest request) {	
-		String message=ex.getConstraintViolations().stream()
-		.map( cv -> cv == null ? "null" : cv.getMessage() )
-		.collect( Collectors.joining( ", " ) );
-		ErrorDetails errorDetails = new ErrorDetails(new Date(),message,"Request parameter is not following all constaint",HttpStatus.BAD_REQUEST.value());
+		String message=processFieldErrors(ex.getConstraintViolations(),request.getLocale());		
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),message,messageSource.getMessage("constraint.exception",null, request.getLocale()),HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 	@ExceptionHandler(TransactionSystemException.class)
@@ -56,7 +59,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		Throwable trThrowable=ex.getMostSpecificCause();
 		if(trThrowable instanceof ConstraintViolationException)
 			return handleContraintNotSatified(((ConstraintViolationException) trThrowable), request);
-		ErrorDetails errorDetails = new ErrorDetails(new Date(),trThrowable.getMessage(),"Request parameter is not following all constaint",HttpStatus.BAD_REQUEST.value());
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),trThrowable.getMessage(),messageSource.getMessage("constraint.exception",null, request.getLocale()),HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 	
@@ -64,31 +67,43 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 	public final ResponseEntity<ErrorDetails> handleContraintNotSatified(DataIntegrityViolationException ex,
 			WebRequest request) {	
 		String message=ex.getMostSpecificCause().getMessage();
-		ErrorDetails errorDetails = new ErrorDetails(new Date(),message,"Request parameter is not following all constaint",HttpStatus.BAD_REQUEST.value());
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),message,messageSource.getMessage("constraint.exception",null, request.getLocale()),HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 	
-	/**
-	 * 
-	 * @param ex
-	 * @param request
-	 * @return ResponseEntity
-	 */
-	@ExceptionHandler(AccessDeniedException.class)
-	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(AccessDeniedException ex, WebRequest request) {
-		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"You are not authorise to access these resources",HttpStatus.FORBIDDEN.value());
-		return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
-	}
+	
 	
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(EmptyResultDataAccessException ex, WebRequest request) {
-		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"Resources is not availabel which you trying to delete",HttpStatus.NOT_FOUND.value());
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("resource.notfound",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
+	
+
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(ResourceNotFoundException ex,
+			WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("resource.notfound",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler(NoSuchElementException.class)
+	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(NoSuchElementException ex,
+			WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("resource.notfound",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+	
 	@ExceptionHandler(BadCredentialsException.class)
 	public final ResponseEntity<ErrorDetails> handleBadCredentails(BadCredentialsException ex, WebRequest request) {
-		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false),HttpStatus.UNAUTHORIZED.value());
+		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false),HttpStatus.UNAUTHORIZED.value());
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("unauthorised.access",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+	}
+	@ExceptionHandler(AccessDeniedException.class)
+	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("access.denied",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
+		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"You are not authorise to access these resources",HttpStatus.FORBIDDEN.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(Exception.class)
@@ -96,4 +111,17 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	/*@ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ValidationErrorDTO processValidationError(MethodArgumentNotValidException ex) {
+        BindingResult result = ex.getBindingResult();
+        List<FieldError> fieldErrors = result.getFieldErrors();
+ 
+        return processFieldErrors(fieldErrors);
+    }
+ */
+    
+	
 }

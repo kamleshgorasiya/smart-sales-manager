@@ -9,6 +9,8 @@ public class UserDto {
     private String lastName;
     private String username;
     private String password;
+    private String email;
+    private String mobile;
     private int age;
     private long salary;
     private List<Long> role_ids;
@@ -113,6 +115,34 @@ public class UserDto {
 	 */
 	public void setSalary(long salary) {
 		this.salary = salary;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the mobile
+	 */
+	public String getMobile() {
+		return mobile;
+	}
+
+	/**
+	 * @param mobile the mobile to set
+	 */
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
    

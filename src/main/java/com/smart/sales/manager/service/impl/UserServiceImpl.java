@@ -78,11 +78,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	    newUser.setLastName(user.getLastName());
 	    newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 		newUser.setAge(user.getAge());
-		List<Role> userRoleList = new  ArrayList<Role>();
+		 List<Role> userRoleList = new  ArrayList<Role>();
 		Role userRole=roleRepository.findByName("ADMIN");
 		userRoleList.add(userRole);
 		newUser.setRoles(userRoleList);
 		newUser.setSalary(user.getSalary());
+		newUser.setEmail(user.getEmail());
+		newUser.setMobile(user.getMobile());
         return userRepository.save(newUser);
     }
 
@@ -91,8 +93,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = findById(userDto.getId());
         if(user != null) {
             BeanUtils.copyProperties(userDto, user, "password","username","id");
-            List<Role> userRole = roleRepository.findAllById(userDto.getRole_ids());
-            user.setRoles(userRole);
+            List<Role> userRoleList = new  ArrayList<Role>();
+            if(userDto.getRole_ids()==null||userDto.getRole_ids().size()==0)
+            {
+            	Role userRole=roleRepository.findByName("USER");
+            	userRoleList.add(userRole);
+            }
+            else    		
+            userRoleList.addAll(roleRepository.findAllById(userDto.getRole_ids()));
+            user.setRoles(userRoleList);
             return userRepository.save(user);
         }
         return user;

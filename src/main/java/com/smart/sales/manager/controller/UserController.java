@@ -28,8 +28,7 @@ public class UserController {
   
     @PostMapping(value="/signup")
     public ApiResponse<User> signup(@RequestHeader(name="Accept-language",required=false) Locale locale, @RequestBody UserDto user){
-    
-        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
+            return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
     }
     @PostMapping(value="/users")
     @PreAuthorize("hasRole('ADMIN')")
@@ -52,6 +51,7 @@ public class UserController {
     @PutMapping("/users/update/me")
     public ApiResponse<UserDto> updateMe(@RequestHeader(name="Accept-language",required=false) Locale locale,@RequestBody UserDto userDto,Authentication authentication) {
     	String username= authentication.getName();
+    	
         return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.profile.updated", null, locale),userService.updateMe(userDto,username));
     }
     
