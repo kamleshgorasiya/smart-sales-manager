@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -19,7 +21,10 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 
@@ -34,6 +39,13 @@ public class User {
 	
 	@Column
 	private boolean is_email_verified;
+	
+	@Column
+	private long created;
+	
+	@Column
+	private long updated;
+	
 	
 	@Column(length=50, nullable=false)
     @Size(min = 2, max = 64, message="length.twoto64")
@@ -236,6 +248,43 @@ public class User {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-	
+
+	/**
+	 * @return the created
+	 */
+	public long getCreated() {
+		return created;
+	}
+
+	/**
+	 * @param created the created to set
+	 */
+	public void setCreated(long created) {
+		this.created = created;
+	}
+
+	/**
+	 * @return the updated
+	 */
+	public long getUpdated() {
+		return updated;
+	}
+
+	/**
+	 * @param updated the updated to set
+	 */
+	public void setUpdated(long updated) {
+		this.updated = updated;
+	}
+	@PrePersist
+	protected void onCreate() {
+		created=new Date().getTime();
+	    //created = new Date();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		updated = new Date().getTime();
+	}
 	
 }

@@ -14,4 +14,8 @@ public interface UserService {
     User findById(long id);
     User update(UserDto user);
     User updateMe(UserDto user,String username);
+    
+    User findByEmail(String email);
+
+    void updatePassword(String password, Long userId);
 }

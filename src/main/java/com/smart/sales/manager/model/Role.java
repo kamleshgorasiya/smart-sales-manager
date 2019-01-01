@@ -15,7 +15,19 @@ public class Role {
     @Column
     private String description;
 
-    public long getId() {
+    
+    
+    public Role() {
+		super();
+	}
+
+	public Role(long id, String name, String description) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+	}
+
+	public long getId() {
         return id;
     }
 

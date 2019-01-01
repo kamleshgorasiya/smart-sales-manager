@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Autowired
 	private BCryptPasswordEncoder bcryptEncoder;
 
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
 		if(user == null){
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	    newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 		newUser.setAge(user.getAge());
 		 List<Role> userRoleList = new  ArrayList<Role>();
-		Role userRole=roleRepository.findByName("ADMIN");
+		Role userRole=roleRepository.findByName("USER");
 		userRoleList.add(userRole);
 		newUser.setRoles(userRoleList);
 		newUser.setSalary(user.getSalary());
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public User update(UserDto userDto) {
         User user = findById(userDto.getId());
         if(user != null) {
-            BeanUtils.copyProperties(userDto, user, "password","username","id");
+            BeanUtils.copyProperties(userDto, user, "password","username","id","email","mobile");
             List<Role> userRoleList = new  ArrayList<Role>();
             if(userDto.getRole_ids()==null||userDto.getRole_ids().size()==0)
             {
@@ -115,6 +116,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return userRepository.save(user);
         }
         return user;
+    }
+
+    @Override
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+	@Override
+    public void updatePassword(String password, Long userId) {
+        userRepository.updatePassword(password, userId);
     }
 
 	

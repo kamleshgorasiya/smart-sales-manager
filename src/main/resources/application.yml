@@ -1,0 +1,54 @@
+# ===============================
+# = Hibernate datasource
+# ===============================
+spring:
+  messages:
+    basename: messages
+  datasource:
+    url: jdbc:mysql://localhost:3306/smart_sales_manager
+    username: root
+    password: 886644
+
+# ===============================
+# = JPA configurations
+# ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: MYSQL
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+
+# ===============================
+# = MAIL configurations
+# ===============================
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: 12mscca19@gmail.com
+    password: ilumomdad140389
+    port: 587
+#    host: mailrelay.intranet.hdp.be
+#    username: test
+#    password: test
+#    port: 2525
+    properties:
+      mail:
+        smtp:
+          debug: true
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+
+# ===============================
+# = Logging configurations
+# ===============================
+logging:
+  level:
+    root: WARN
+    com.memorynotfound: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+
+    <title>Login</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <h3><i class="glyphicon glyphicon-lock" style="font-size:2em;"></i></h3>
+                        <h2 class="text-center">Login</h2>
+                        <div class="panel-body">
+
+                            <div th:if="${param.error}">
+                                <div class="alert alert-danger">
+                                    Invalid username or password.
+                                </div>
+                            </div>
+                            <div th:if="${param.logout}">
+                                <div class="alert alert-info">
+                                    You have been logged out.
+                                </div>
+                            </div>
+                            <div th:if="${param.resetSuccess}">
+                                <div class="alert alert-info">
+                                    You successfully reset your password.
+                                </div>
+                            </div>
+
+                            <form th:action="@{/login}" method="post">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">@</span>
+                                        <input id="username"
+                                               name="username"
+                                               autofocus="autofocus"
+                                               class="form-control"
+                                               placeholder="Username"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="glyphicon glyphicon-lock"></i>
+                                        </span>
+                                        <input id="password"
+                                               name="password"
+                                               class="form-control"
+                                               placeholder="Password"
+                                               type="password"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success btn-block">Login</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    New user? <a href="/" th:href="@{/registration}">Register</a>
+                </div>
+                <div class="col-md-12">
+                    Forgot password? <a href="/" th:href="@{/forgot-password}">Reset password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
