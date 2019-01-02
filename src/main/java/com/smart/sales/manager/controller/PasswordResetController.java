@@ -51,6 +51,8 @@ public class PasswordResetController {
     public String handlePasswordReset(@ModelAttribute("passwordResetForm") @Valid PasswordResetDto form,
                                       BindingResult result,
                                       RedirectAttributes redirectAttributes) {
+    
+    	
 
         if (result.hasErrors()){
             redirectAttributes.addFlashAttribute(BindingResult.class.getName() + ".passwordResetForm", result);

@@ -1,0 +1,39 @@
+# ===============================
+# = H2 data source
+# ===============================
+spring:
+  datasource:
+    url: jdbc:h2:mem:spring-security-hibernate-test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    platform: h2
+    username: sa
+    password:
+
+# ===============================
+# = JPA configurations
+# ===============================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    database-platform: H2
+
+# ===============================
+# = MAIL configurations
+# ===============================
+  mail:
+    default-encoding: UTF-8
+    host: localhost
+    jndi-name:
+    username: username
+    password: secret
+    port: 2525
+    properties:
+      mail:
+        debug: false
+        smtp:
+          debug: false
+          auth: true
+          starttls: true
+    protocol: smtp
+    test-connection: false
