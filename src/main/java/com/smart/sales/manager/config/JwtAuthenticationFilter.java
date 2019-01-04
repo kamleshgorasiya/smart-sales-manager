@@ -17,8 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.smart.sales.manager.model.Constants.HEADER_STRING;
-import static com.smart.sales.manager.model.Constants.TOKEN_PREFIX;
+import static com.smart.sales.manager.request.model.Constants.HEADER_STRING;
+import static com.smart.sales.manager.request.model.Constants.TOKEN_PREFIX;
 
 import java.io.IOException;
 

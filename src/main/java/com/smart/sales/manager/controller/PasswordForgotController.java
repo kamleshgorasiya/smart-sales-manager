@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.smart.sales.manager.model.Mail;
-import com.smart.sales.manager.model.PasswordForgotDto;
-import com.smart.sales.manager.model.PasswordResetToken;
-import com.smart.sales.manager.model.User;
+import com.smart.sales.manager.entity.model.PasswordResetToken;
+import com.smart.sales.manager.entity.model.User;
 import com.smart.sales.manager.repository.PasswordResetTokenRepository;
+import com.smart.sales.manager.request.model.Mail;
+import com.smart.sales.manager.request.model.PasswordForgotDto;
 import com.smart.sales.manager.service.EmailService;
 import com.smart.sales.manager.service.UserService;
 

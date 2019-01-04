@@ -2,7 +2,8 @@ package com.smart.sales.manager.service;
 
 import java.util.List;
 
-import com.smart.sales.manager.model.Role;
+import com.smart.sales.manager.entity.model.Role;
+
 
 
 public interface RoleService {

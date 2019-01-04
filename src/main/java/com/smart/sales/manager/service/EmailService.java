@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import com.smart.sales.manager.model.Mail;
+import com.smart.sales.manager.request.model.Mail;
 
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;

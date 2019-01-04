@@ -1,4 +1,4 @@
-package com.smart.sales.manager.model;
+package com.smart.sales.manager.exception.model;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;

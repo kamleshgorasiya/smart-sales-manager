@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import com.smart.sales.manager.model.ErrorDetails;
-import com.smart.sales.manager.model.ResourceNotFoundException;
+
+import com.smart.sales.manager.exception.model.ResourceNotFoundException;
+import com.smart.sales.manager.response.model.ErrorDetails;
+
 
 @ControllerAdvice
 @RestController

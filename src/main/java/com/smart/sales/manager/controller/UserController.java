@@ -2,15 +2,14 @@ package com.smart.sales.manager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.smart.sales.manager.model.ApiResponse;
-import com.smart.sales.manager.model.User;
-import com.smart.sales.manager.model.UserDto;
+import com.smart.sales.manager.entity.model.User;
+import com.smart.sales.manager.request.model.UserDto;
+import com.smart.sales.manager.response.model.ApiResponse;
 import com.smart.sales.manager.service.UserService;
 
 import java.util.List;
@@ -28,6 +27,10 @@ public class UserController {
   
     @PostMapping(value="/signup")
     public ApiResponse<User> signup(@RequestHeader(name="Accept-language",required=false) Locale locale, @RequestBody UserDto user){
+            return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
+    }
+    @PostMapping(value="/signup-admin")
+    public ApiResponse<User> signupAdmin(@RequestHeader(name="Accept-language",required=false) Locale locale, @RequestBody UserDto user){
             return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
     }
     @PostMapping(value="/users")

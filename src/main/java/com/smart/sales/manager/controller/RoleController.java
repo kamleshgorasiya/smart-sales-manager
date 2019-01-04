@@ -3,16 +3,11 @@ package com.smart.sales.manager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import com.smart.sales.manager.model.ApiResponse;
-import com.smart.sales.manager.model.Role;
-import com.smart.sales.manager.model.User;
-import com.smart.sales.manager.model.UserDto;
+import com.smart.sales.manager.entity.model.Role;
+import com.smart.sales.manager.entity.model.User;
+import com.smart.sales.manager.response.model.ApiResponse;
 import com.smart.sales.manager.service.RoleService;
-import com.smart.sales.manager.service.UserService;
-
 import java.util.List;
 
 

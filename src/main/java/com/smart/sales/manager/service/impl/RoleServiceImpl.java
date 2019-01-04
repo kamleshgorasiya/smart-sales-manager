@@ -3,7 +3,8 @@ package com.smart.sales.manager.service.impl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.smart.sales.manager.model.Role;
+
+import com.smart.sales.manager.entity.model.Role;
 import com.smart.sales.manager.repository.RoleRepository;
 import com.smart.sales.manager.service.RoleService;
 import java.util.*;

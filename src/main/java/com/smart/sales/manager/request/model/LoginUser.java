@@ -1,4 +1,4 @@
-package com.smart.sales.manager.model;
+package com.smart.sales.manager.request.model;
 
 public class LoginUser {
 

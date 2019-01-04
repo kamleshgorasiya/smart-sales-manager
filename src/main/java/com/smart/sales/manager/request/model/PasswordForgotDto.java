@@ -1,7 +1,7 @@
-package com.smart.sales.manager.model;
+package com.smart.sales.manager.request.model;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 public class PasswordForgotDto {
 

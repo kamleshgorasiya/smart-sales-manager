@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.smart.sales.manager.model.User;
+import com.smart.sales.manager.entity.model.User;
+
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

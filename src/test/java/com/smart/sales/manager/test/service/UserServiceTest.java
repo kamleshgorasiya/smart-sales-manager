@@ -3,7 +3,8 @@ package com.smart.sales.manager.test.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import com.smart.sales.manager.model.User;
+
+import com.smart.sales.manager.entity.model.User;
 import com.smart.sales.manager.service.UserService;
 
 import static org.junit.Assert.assertEquals;

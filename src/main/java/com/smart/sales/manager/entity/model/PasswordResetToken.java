@@ -1,4 +1,4 @@
-package com.smart.sales.manager.model;
+package com.smart.sales.manager.entity.model;
 
 import javax.persistence.*;
 import java.util.Calendar;

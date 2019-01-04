@@ -8,11 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.smart.sales.manager.model.User;
-
-import static com.smart.sales.manager.model.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
-import static com.smart.sales.manager.model.Constants.AUTHORITIES_KEY;
-import static com.smart.sales.manager.model.Constants.SIGNING_KEY;
+import static com.smart.sales.manager.request.model.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
+import static com.smart.sales.manager.request.model.Constants.AUTHORITIES_KEY;
+import static com.smart.sales.manager.request.model.Constants.SIGNING_KEY;
 
 import java.io.Serializable;
 import java.util.Arrays;

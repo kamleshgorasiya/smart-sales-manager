@@ -1,4 +1,4 @@
-package com.smart.sales.manager.model;
+package com.smart.sales.manager.response.model;
 
 public class ApiResponse<T> {
 

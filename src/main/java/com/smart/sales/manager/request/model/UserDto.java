@@ -1,6 +1,4 @@
-package com.smart.sales.manager.model;
-
-import java.util.List;
+package com.smart.sales.manager.request.model;
 
 public class UserDto {
 
@@ -13,7 +11,7 @@ public class UserDto {
     private String mobile;
     private int age;
     private long salary;
-    private List<Long> role_ids;
+    private String role="USER";
 	    
 	    
  
@@ -77,22 +75,20 @@ public class UserDto {
     }
  
 
-	
 
-	
 
 	/**
-	 * @return the role_ids
+	 * @return the role
 	 */
-	public List<Long> getRole_ids() {
-		return role_ids;
+	public String getRole() {
+		return role;
 	}
 
 	/**
-	 * @param role_ids the role_ids to set
+	 * @param role the role to set
 	 */
-	public void setRole_ids(List<Long> role_ids) {
-		this.role_ids = role_ids;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public int getAge() {

@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.smart.sales.manager.model.Role;
-import com.smart.sales.manager.model.User;
-import com.smart.sales.manager.model.UserDto;
+import com.smart.sales.manager.entity.model.Role;
+import com.smart.sales.manager.entity.model.User;
 import com.smart.sales.manager.repository.RoleRepository;
 import com.smart.sales.manager.repository.UserRepository;
+import com.smart.sales.manager.request.model.UserDto;
 import com.smart.sales.manager.service.UserService;
 
 import java.util.*;
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-    public User save(UserDto user) {
+    public User saveAdmin(UserDto user) {
 	    User newUser = new User();
 	    newUser.setUsername(user.getUsername());
 	    newUser.setFirstName(user.getFirstName());
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	    newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 		newUser.setAge(user.getAge());
 		 List<Role> userRoleList = new  ArrayList<Role>();
-		Role userRole=roleRepository.findByName("USER");
+		Role userRole=roleRepository.findByName("ADMIN");
 		userRoleList.add(userRole);
 		newUser.setRoles(userRoleList);
 		newUser.setSalary(user.getSalary());
@@ -89,19 +89,35 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.save(newUser);
     }
 
+
+	@Override
+    public User save(UserDto user) {
+	    User newUser = new User();
+	    newUser.setUsername(user.getUsername());
+	    newUser.setFirstName(user.getFirstName());
+	    newUser.setLastName(user.getLastName());
+	    newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+		newUser.setAge(user.getAge());
+		 List<Role> userRoleList = new  ArrayList<Role>();
+		Role userRole=roleRepository.findByName(user.getRole());
+		userRoleList.add(userRole);
+		newUser.setRoles(userRoleList);
+		newUser.setSalary(user.getSalary());
+		newUser.setEmail(user.getEmail());
+		newUser.setMobile(user.getMobile());
+        return userRepository.save(newUser);
+    }
+
+	
     @Override
     public User update(UserDto userDto) {
         User user = findById(userDto.getId());
         if(user != null) {
             BeanUtils.copyProperties(userDto, user, "password","username","id","email","mobile");
-            List<Role> userRoleList = new  ArrayList<Role>();
-            if(userDto.getRole_ids()==null||userDto.getRole_ids().size()==0)
-            {
-            	Role userRole=roleRepository.findByName("USER");
-            	userRoleList.add(userRole);
-            }
-            else    		
-            userRoleList.addAll(roleRepository.findAllById(userDto.getRole_ids()));
+            List<Role> userRoleList = new  ArrayList<Role>();          
+            	Role userRole=roleRepository.findByName(userDto.getRole());
+            	userRoleList.add(userRole);        
+            
             user.setRoles(userRoleList);
             return userRepository.save(user);
         }

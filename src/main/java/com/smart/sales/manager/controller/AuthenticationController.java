@@ -11,9 +11,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.smart.sales.manager.config.TokenProvider;
-import com.smart.sales.manager.model.ApiResponse;
-import com.smart.sales.manager.model.AuthToken;
-import com.smart.sales.manager.model.LoginUser;
+
+import com.smart.sales.manager.request.model.LoginUser;
+import com.smart.sales.manager.response.model.ApiResponse;
+import com.smart.sales.manager.response.model.AuthToken;
 
 
 
