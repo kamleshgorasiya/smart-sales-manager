@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -55,6 +56,14 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		ErrorDetails errorDetails = new ErrorDetails(new Date(),message,messageSource.getMessage("constraint.exception",null, request.getLocale()),HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> usernameNotFoundOrActivated(UsernameNotFoundException ex,
+			WebRequest request) {	
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),ex.getMessage(),messageSource.getMessage("user.notfound",null, request.getLocale()),HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+	
 	@ExceptionHandler(TransactionSystemException.class)
 	public final ResponseEntity<ErrorDetails> handleContraintNotSatified(TransactionSystemException ex,
 			WebRequest request) {	
@@ -104,7 +113,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 	@ExceptionHandler(AccessDeniedException.class)
 	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(AccessDeniedException ex, WebRequest request) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("access.denied",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
-		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"You are not authorise to access these resources",HttpStatus.FORBIDDEN.value());
+		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"You are not authorize to access these resources",HttpStatus.FORBIDDEN.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
 	}
 	
@@ -114,7 +123,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	/*@ExceptionHandler(MethodArgumentNotValidException.class)
+	/*
+	 * @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ValidationErrorDTO processValidationError(MethodArgumentNotValidException ex) {
@@ -122,8 +132,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         List<FieldError> fieldErrors = result.getFieldErrors();
  
         return processFieldErrors(fieldErrors);
-    }
- */
+    } */
     
 	
 }

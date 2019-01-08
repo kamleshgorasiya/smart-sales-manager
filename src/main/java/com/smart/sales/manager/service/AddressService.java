@@ -5,7 +5,7 @@ import java.util.List;
 import com.smart.sales.manager.entity.model.User;
 import com.smart.sales.manager.request.model.UserDto;
 
-public interface UserService {
+public interface AddressService {
 
     User save(UserDto user);
     User saveUser(UserDto user);

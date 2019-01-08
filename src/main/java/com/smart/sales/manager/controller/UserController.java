@@ -3,6 +3,7 @@ package com.smart.sales.manager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -31,18 +32,18 @@ public class UserController {
     }
     @PostMapping(value="/signup-admin")
     public ApiResponse<User> signupAdmin(@RequestHeader(name="Accept-language",required=false) Locale locale, @RequestBody UserDto user){
-            return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
+            return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.saveAdmin(user));
     }
     @PostMapping(value="/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<User> saveUser(@RequestHeader(name="Accept-language",required=false) Locale locale, @RequestBody UserDto user){
     
-        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.save(user));
+        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.saved", null, locale),userService.saveUser(user));
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value="/users")
-    public ApiResponse<List<User>> listUser(@RequestHeader(name="Accept-language",required=false) Locale locale){
-        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.list.fetched", null, locale),userService.findAll());
+    @GetMapping(value="/users/{page}/{order}/{field}")
+    public ApiResponse<List<User>> listUser(@RequestHeader(name="Accept-language",required=false) Locale locale, @PathVariable int page, @PathVariable String order, @PathVariable String field){
+    	return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.list.fetched", null, locale),userService.findAll(page, order, field));
     }
     
     @GetMapping("/users/me")
@@ -59,9 +60,14 @@ public class UserController {
     }
     
     @GetMapping("/users/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<User> getOne(@RequestHeader(name="Accept-language",required=false) Locale locale, @PathVariable long id){
-        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.fetched", null, locale),userService.findById(id));
+    	User user=userService.findById(id);
+    	/*SimpleBeanPropertyFilter beanPropertyFilter= SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName", "age", "salary");
+    	FilterProvider filterProvider= new SimpleFilterProvider().addFilter("findbyid",beanPropertyFilter);
+    	MappingJacksonValue mapping = new MappingJacksonValue(user);
+    	mapping.setFilters(filterProvider);*/
+    	return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("user.fetched", null, locale),user);
     }
 
     @PutMapping("/users")

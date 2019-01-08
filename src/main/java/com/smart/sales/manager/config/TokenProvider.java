@@ -22,7 +22,12 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider implements Serializable {
 
-    public String getUsernameFromToken(String token) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
