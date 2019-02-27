@@ -78,11 +78,11 @@ public class BusinessController {
     }
 
     @PutMapping("/business/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ApiResponse<Void> deleteBusiness(@RequestHeader(name="Accept-language",required=false) Locale locale, @PathVariable int id, Authentication authentication) {
     	String name=authentication.getName();
     	String[] args= {"Specified Business"};
-    	businessService.deleteBusinessByIdAndOwner(id,name);
+    	businessService.deleteByIdAndOwner(id,name);
         return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("entity.deleted", args, locale), null);
     }
 }

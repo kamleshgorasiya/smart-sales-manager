@@ -12,7 +12,9 @@ public interface BusinessService {
    // Business saveBusiness(Business business);
     List<Business> findAll(int page, String order,String field);
     void delete(long id);
-    void deleteBusinessByIdAndOwner(long id,String owner);
+    void deleteByIdAndOwner(long id,String owner);
+    
+    Business findByIdAndOwner(long id,String owner);
 
     Business findById(long id);
     Business update(Business business,String ownername, Locale locale);

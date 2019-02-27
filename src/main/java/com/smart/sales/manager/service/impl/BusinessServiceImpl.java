@@ -61,8 +61,8 @@ public class BusinessServiceImpl implements BusinessService {
 
 	
 	@Override
-	public void deleteBusinessByIdAndOwner(long id,String owner) {
-		businessRepository.deleteByIdAndOwner(id,owner);
+	public void deleteByIdAndOwner(long id,String owner) {
+		businessRepository.updateIsDeleted(true,id,owner);
 	}
 	
 	@Override
@@ -82,22 +82,21 @@ public class BusinessServiceImpl implements BusinessService {
 	@Override
 	public Business update(Business business, String ownerName, Locale locale) {
 		System.out.println(business.toString());
-		if(!business.getOwner().equals(ownerName))
-			{
-			String args[]= {"Business details"};
-			String message = messageSource.getMessage("entity.updated", args, locale);
-			throw new CustomAuthenticationException(message);
-			}
-			
+		
 		
 		Business businessDbo = findById(business.getId());
 		System.out.println(businessDbo.toString());
-		if (businessDbo != null) {
-			BeanUtils.copyProperties(business, businessDbo, "isActive", "username", "id", "email", "mobile");
+		if (businessDbo != null&&businessDbo.getOwner().equals(ownerName)&&business.getOwner().equals(ownerName)) {
+			BeanUtils.copyProperties(business, businessDbo, "isActive", "username", "id", "email", "mobile","created","updated");
 			
 			return businessRepository.save(businessDbo);
 		}
-		return businessDbo;
+		else {
+			String args[]= {"Business details"};
+			String message = messageSource.getMessage("entity.updated.error", args, locale);
+			throw new CustomAuthenticationException(message);
+		}
+		
 	}
 	@Override
 	public Business update(Business business) {
@@ -106,7 +105,7 @@ public class BusinessServiceImpl implements BusinessService {
 		Business businessDbo = findById(business.getId());
 		System.out.println(businessDbo.toString());
 		if (businessDbo != null) {
-			BeanUtils.copyProperties(business, businessDbo, "username", "id", "email", "mobile");			
+			BeanUtils.copyProperties(business, businessDbo, "username", "id", "email", "mobile","created","updated");			
 			return businessRepository.save(businessDbo);
 		}
 		return businessDbo;
@@ -149,6 +148,11 @@ public class BusinessServiceImpl implements BusinessService {
 		List<Business> list = new ArrayList<>();
 		businessRepository.findByOwner(ownerId,request).iterator().forEachRemaining(list::add);
 		return list;
+	}
+
+	@Override
+	public Business findByIdAndOwner(long id, String owner) {
+		return businessRepository.findByIdAndOwner(id,owner);
 	}
 
 	

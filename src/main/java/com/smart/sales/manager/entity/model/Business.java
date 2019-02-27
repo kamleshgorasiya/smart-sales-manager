@@ -42,7 +42,7 @@ public class Business {
 	
 	
  
-	@Column(unique = true,length=512, nullable=false)
+	@Column(length=512, nullable=false)
 	@Size(min = 2, max = 512, message="length.eightto512")
 	@NotNull(message = "notempty")
 	private String description;
@@ -60,6 +60,9 @@ public class Business {
 	
 	@Column	
 	private boolean isActive;
+	
+	@Column	
+	private boolean isDeleted;
 	
 	@Column
 	private boolean isBookAppointment;
@@ -309,7 +312,11 @@ public class Business {
 	 * @param services the services to set
 	 */
 	public void setServices(List<Bookable> services) {
-		this.services = services;
+		this.services.clear();
+	    if (services != null) {
+	        this.services.addAll(services);
+	    }
+		
 	}
 
 	/**
@@ -510,6 +517,21 @@ public class Business {
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
+
+	/**
+	 * @return the isDeleted
+	 */
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	/**
+	 * @param isDeleted the isDeleted to set
+	 */
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+	
 	
 	
 }

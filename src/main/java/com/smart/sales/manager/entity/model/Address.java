@@ -1,6 +1,6 @@
 package com.smart.sales.manager.entity.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,12 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -85,8 +84,9 @@ public class Address {
 	private String zipcode;
 
 	@ManyToOne
-	@JoinColumn(name="id")
+	@JoinColumn(name="user_id")
 	@NotNull(message="notempty")
+	@JsonIgnore
 	private User user;
 
 	public long getId() {

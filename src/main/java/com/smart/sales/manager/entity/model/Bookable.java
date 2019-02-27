@@ -34,7 +34,7 @@ public class Bookable {
     @Column(length=128, nullable=false)    
 	private String title;	
  
-	@Column(unique = true,length=512, nullable=false)
+	@Column(length=512, nullable=false)
 	@Size(min = 2, max = 512, message="length.eightto512")
 	@NotNull(message = "notempty")
 	private String description;	
@@ -62,8 +62,9 @@ public class Bookable {
 	private int deliveryDistance;	
 
 	@ManyToOne
-	@JoinColumn(name="id")
+	@JoinColumn(name="business_id")
 	@NotNull(message="notempty")
+	@JsonIgnore
 	private Business business;
 	
 	@Column	

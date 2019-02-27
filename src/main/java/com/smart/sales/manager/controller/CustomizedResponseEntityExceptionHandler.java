@@ -107,7 +107,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 	@ExceptionHandler(BadCredentialsException.class)
 	public final ResponseEntity<ErrorDetails> handleBadCredentails(BadCredentialsException ex, WebRequest request) {
 		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false),HttpStatus.UNAUTHORIZED.value());
-		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("unauthorised.access",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("unauthorised.access",null, request.getLocale()),ex.getMessage(),HttpStatus.UNAUTHORIZED.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
 	}
 	@ExceptionHandler(AccessDeniedException.class)
