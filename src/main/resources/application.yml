@@ -26,8 +26,8 @@ spring:
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
-    username: youremail_address
-    password: password
+    username: 12mscca19@gmail.com
+    password: ilumomdad140389
     port: 587
 #    host: mailrelay.intranet.hdp.be
 #    username: test

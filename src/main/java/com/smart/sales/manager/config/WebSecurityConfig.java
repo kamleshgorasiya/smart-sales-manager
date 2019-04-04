@@ -52,22 +52,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().
                 authorizeRequests()
-                .antMatchers("/token/*","/signup**","/swagger-ui.html","/v2/api-docs").permitAll()  
+                .antMatchers("/api/token/*","/api/signup**","/api/swagger-ui.html","/api/v2/api-docs").permitAll()  
                 .antMatchers(
-                        "/forgot-password**",
-                        "/reset-password**").permitAll()
+                        "/api/forgot-password**","/login**",
+                        "/api/reset-password**").permitAll()
                 .antMatchers(
                         "/js/**",
                         "/css/**",
                         "/img/**",
-                        "/webjars/**").permitAll()                
+                        "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout").permitAll()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
+                .logoutSuccessUrl("/api/login?logout").permitAll()
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(unauthorizedHandler)
                 .and()

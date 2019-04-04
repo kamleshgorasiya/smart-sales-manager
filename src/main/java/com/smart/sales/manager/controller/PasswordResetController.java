@@ -18,7 +18,7 @@ import com.smart.sales.manager.service.UserService;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/reset-password")
+@RequestMapping("/api/reset-password")
 public class PasswordResetController {
 
     @Autowired private UserService userService;
@@ -50,14 +50,13 @@ public class PasswordResetController {
     @Transactional
     public String handlePasswordReset(@ModelAttribute("passwordResetForm") @Valid PasswordResetDto form,
                                       BindingResult result,
-                                      RedirectAttributes redirectAttributes) {
-    
+                                      RedirectAttributes redirectAttributes) {    
     	
 
         if (result.hasErrors()){
             redirectAttributes.addFlashAttribute(BindingResult.class.getName() + ".passwordResetForm", result);
             redirectAttributes.addFlashAttribute("passwordResetForm", form);
-            return "redirect:/reset-password?token=" + form.getToken();
+            return "redirect:/api/reset-password?token=" + form.getToken();
         }
 
         PasswordResetToken token = tokenRepository.findByToken(form.getToken());

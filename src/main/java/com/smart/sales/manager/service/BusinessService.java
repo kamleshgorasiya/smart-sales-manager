@@ -12,19 +12,21 @@ public interface BusinessService {
    // Business saveBusiness(Business business);
     List<Business> findAll(int page, String order,String field);
     void delete(long id);
-    void deleteByIdAndOwner(long id,String owner);
+    void deleteByIdAndOwnerId(long id,String owner_name,boolean isDeleted);
     
-    Business findByIdAndOwner(long id,String owner);
+    Business findByIdAndOwner(long id,long owner);
 
     Business findById(long id);
+    
     Business update(Business business,String ownername, Locale locale);
+    Business updateBusinessOnOff(long id, boolean status,String ownername, Locale locale);
     Business update(Business business);
     
 	List<Business> findByName(String businessName); 
 	List<Business> findByZipcode(String zipcode);
 	
 	List<Business> findByBusinessCategory(String category);
-	List<Business> findByOwner(String owner);
+	List<Business> findByOwner(String ownerName);
 	
 	
 }

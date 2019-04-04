@@ -7,9 +7,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -19,11 +24,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.Nullable;
 
 
 @Entity
 public class Business {
-
 
 	
 	@Id
@@ -32,30 +37,32 @@ public class Business {
 	
 	@Column(length=64, nullable=false)
     @Size(min = 2, max = 64, message="length.twoto64")
-	@NotNull(message = "notempty")
+	@NotNull(message = "{notempty}")
 	private String name;
 	
 	
     @Size(min = 2, max = 128, message="length.eightto128")
-	@Column(length=128, nullable=false)    
+	@Column(length=128, nullable=true)    
 	private String title;
-	
+    
+    @Size(min = 8, max = 16, message="length.eightto16")
+	@Column(length=16, nullable=true)    
+	private String gstNumber;
+
 	
  
-	@Column(length=512, nullable=false)
+	@Column(length=512)
 	@Size(min = 2, max = 512, message="length.eightto512")
-	@NotNull(message = "notempty")
 	private String description;
 	
-	@Column(unique = true,length=64, nullable=false)
-	@Size(min = 1, max = 64, message="length.twoto64")
-	@NotEmpty(message = "notempty")
+	@Column(length=64)
+	@Size(min = 1, max = 64, message="length.twoto64")	
 	@Email(message = "valid.format")
+	@Nullable
 	private String email;
 	
-	@Column(unique = true,length=14, nullable=false)
-	@Size(min = 8, max = 14, message="length.eightto14")
-	@NotNull(message = "notempty")	
+	@Column(length=14)
+	@Size(min = 8, max = 14, message="length.eightto14")	
 	private String mobile;
 	
 	@Column	
@@ -77,69 +84,77 @@ public class Business {
 	private boolean allowedDelivery;
 	
 	@Column	
+	private boolean isOn;
+
+	
+	@Column	
 	private int minOrderAmount;
 	
 	@Column	
 	private int deliveryDistance;	
 	
-	@Column	
-	private String businessCategory;
 	
-	@Column(length=64, nullable=false)
-    @Size(min = 2, max = 64, message="length.twoto64")
-	@NotNull(message = "notempty")
-	private String owner;
+	@Column
+	private long ownerId;
+	
+	@Column(length=64)
+	@Size(min = 1, max = 64, message="length.notmorethan32")
+	private String ownerName;
+	
 	
 	@Column	
 	private String businessTags;
 	
+	
 	@Column
-	@JsonIgnore
 	private long created;
 	
 	@Column
-	@JsonIgnore
 	private long updated;
 	
+
 	
-	@Column(length=14, nullable=false)
-	@Size(min = 1, max = 14, message="length.notmorethan14")
-	@NotNull(message = "notempty")	
-	private String longi="0.124564";
+	@Column(length=32, nullable=false)
+	@Size(min = 1, max = 32, message="length.notmorethan14")
+	@NotNull(message = "{notempty}")	
+	private String longitude;
 	
 	
-	@Column(length=14, nullable=false)
-	@Size(min = 8, max = 14, message="length.notmorethan14")
-	@NotNull(message = "notempty")	
-	private String lat="0.124564";
+	@Column(length=32, nullable=false)
+	@Size(min = 8, max = 32, message="length.notmorethan14")
+	@NotNull(message = "{notempty}")	
+	private String latitude;
 	
 	@Column(length=128, nullable=false)
 	@Size(min = 5, max = 128, message="length.eightto128")
-	@NotEmpty(message = "notempty")
+	@NotNull(message = "{notempty}")
 	private String address;
 	
-	@Column(length=28, nullable=false)
+	@Column(length=28)
 	@Size(min = 1, max = 28, message="length.oneto28")
-	@NotEmpty(message = "notempty")
 	private String city;
 	
-	@Column(length=28, nullable=false)
+	@Column(length=28)
 	@Size(min = 1, max = 28, message="length.oneto28")
-	@NotEmpty(message = "notempty")
 	private String state;
 	
-	@Column(length=28, nullable=false)
+	@Column(length=28)
 	@Size(min = 1, max = 28, message="length.oneto28")
-	@NotEmpty(message = "notempty")
 	private String country;
 	
-	@Column(length=8, nullable=false)
+	@Column(length=8)
 	@Size(min = 5, max = 8, message="length.fiveto8")
-	@NotEmpty(message = "notempty")
 	private String zipcode;
 
-	@OneToMany(mappedBy="business",cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<Bookable> services=new ArrayList<>();
+	@OneToMany(mappedBy="business",cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
+	@JsonIgnore
+	private List<Product> products=new ArrayList<>();
+	
+	@ManyToOne
+	@JoinColumn(name="category_id")
+	@NotNull(message = "{notempty}")
+	private BusinessCategory businessCategory;
+	
 
 	public long getId() {
 		return id;
@@ -147,6 +162,20 @@ public class Business {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the gstNumber
+	 */
+	public String getGstNumber() {
+		return gstNumber;
+	}
+
+	/**
+	 * @param gstNumber the gstNumber to set
+	 */
+	public void setGstNumber(String gstNumber) {
+		this.gstNumber = gstNumber;
 	}
 
 	/**
@@ -195,7 +224,7 @@ public class Business {
 	 * @return the updated
 	 */
 	public long getUpdated() {
-		return updated;
+		return new Date().getTime();
 	}
 
 	/**
@@ -301,22 +330,20 @@ public class Business {
 		this.isAdvanceAppointmentBooking = isAdvanceAppointmentBooking;
 	}
 
+
+	
 	/**
-	 * @return the services
+	 * @return the products
 	 */
-	public List<Bookable> getServices() {
-		return services;
+	public List<Product> getProducts() {
+		return products;
 	}
 
 	/**
-	 * @param services the services to set
+	 * @param products the products to set
 	 */
-	public void setServices(List<Bookable> services) {
-		this.services.clear();
-	    if (services != null) {
-	        this.services.addAll(services);
-	    }
-		
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
 
 	/**
@@ -375,17 +402,18 @@ public class Business {
 		this.deliveryDistance = deliveryDistance;
 	}
 
+
 	/**
 	 * @return the businessCategory
 	 */
-	public String getBusinessCategory() {
+	public BusinessCategory getBusinessCategory() {
 		return businessCategory;
 	}
 
 	/**
 	 * @param businessCategory the businessCategory to set
 	 */
-	public void setBusinessCategory(String businessCategory) {
+	public void setBusinessCategory(BusinessCategory businessCategory) {
 		this.businessCategory = businessCategory;
 	}
 
@@ -399,19 +427,23 @@ public class Business {
 		return businessTags;
 	}
 
+
+
 	/**
-	 * @return the owner
+	 * @return the isOn
 	 */
-	public String getOwner() {
-		return owner;
+	public boolean isOn() {
+		return isOn;
 	}
 
 	/**
-	 * @param owner the owner to set
+	 * @param isOn the isOn to set
 	 */
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setIsOn(boolean isOn) {
+		this.isOn = isOn;
 	}
+
+	
 
 	/**
 	 * @param businessTags the businessTags to set
@@ -420,32 +452,34 @@ public class Business {
 		this.businessTags = businessTags;
 	}
 
+	
+
 	/**
-	 * @return the longi
+	 * @return the longitude
 	 */
-	public String getLongi() {
-		return longi;
+	public String getLongitude() {
+		return longitude;
 	}
 
 	/**
-	 * @param longi the longi to set
+	 * @param longitude the longitude to set
 	 */
-	public void setLongi(String longi) {
-		this.longi = longi;
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 
 	/**
-	 * @return the lat
+	 * @return the latitude
 	 */
-	public String getLat() {
-		return lat;
+	public String getLatitude() {
+		return latitude;
 	}
 
 	/**
-	 * @param lat the lat to set
+	 * @param latitude the latitude to set
 	 */
-	public void setLat(String lat) {
-		this.lat = lat;
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
 
 	/**
@@ -504,6 +538,10 @@ public class Business {
 		this.country = country;
 	}
 
+	
+
+	
+
 	/**
 	 * @return the zipcode
 	 */
@@ -531,7 +569,41 @@ public class Business {
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+
+
 	
+
+	/**
+	 * @return the ownerId
+	 */
+	public long getOwnerId() {
+		return ownerId;
+	}
+
+	/**
+	 * @param ownerId the ownerId to set
+	 */
+	public void setOwnerId(long ownerId) {
+		this.ownerId = ownerId;
+	}
+
+	/**
+	 * @return the ownerName
+	 */
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	/**
+	 * @param ownerName the ownerName to set
+	 */
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+
+
+
 	
 	
 }

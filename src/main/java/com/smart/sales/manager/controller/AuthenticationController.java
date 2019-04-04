@@ -14,13 +14,12 @@ import com.smart.sales.manager.config.TokenProvider;
 
 import com.smart.sales.manager.request.model.LoginUser;
 import com.smart.sales.manager.response.model.ApiResponse;
-import com.smart.sales.manager.response.model.AuthToken;
 
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/api/token")
 public class AuthenticationController {
 
     @Autowired
@@ -33,7 +32,7 @@ public class AuthenticationController {
     private MessageSource messageSource;
 
     @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-    public ApiResponse<AuthToken> login(@RequestHeader(name="Accept-language",required=false) Locale locale,@RequestBody LoginUser loginUser) throws AuthenticationException {
+    public ApiResponse<Object> login(@RequestHeader(name="Accept-language",required=false) Locale locale,@RequestBody LoginUser loginUser) throws AuthenticationException {
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -43,7 +42,7 @@ public class AuthenticationController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
-        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("login.success", null, locale),new AuthToken(token));
+        return new ApiResponse<>(HttpStatus.OK.value(), messageSource.getMessage("login.success", null, locale),token);
         //return new ApiResponse<>(200, "Success", new AuthToken(token));
         
     }

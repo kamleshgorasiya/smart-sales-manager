@@ -1,163 +1,146 @@
 package com.smart.sales.manager.request.model;
 
+import javax.persistence.Column;
+import javax.validation.constraints.Size;
+
 public class UserDto {
 
-   	private int id;
-    private String firstName;
-    private String lastName;
+   
+    private long id;
+    
+    @Size(min = 2, max = 64, message="length.twoto64")
+ 	private String fullName;
+   
+    @Size(min = 2, max = 64, message="length.twoto64")
     private String username;
+    
+    @Size(min = 2, max = 64, message="length.twoto64")
     private String password;
+    
+    @Size(min = 2, max = 64, message="length.twoto64")
     private String email;
+    
+    @Size(min = 8, max = 14, message="length.eightto14")
     private String mobile;
-    private int age;
+
     private boolean is_active;
-    private long salary;
+    
     private String role="USER";
-	    
-	    
- 
-    /**
+    
+	private long dob;
+    
+    
+	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-
 	/**
-	 * @return the firstName
+	 * @return the username
 	 */
-	public String getFirstName() {
-		return firstName;
-	}
-
-	/**
-	 * @param firstName the firstName to set
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
-
-	/**
-	 * @param lastName the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
 	public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-
+		return username;
+	}
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+	/**
+	 * @param password the password to set
+	 */
 	public void setPassword(String password) {
-        this.password = password;
-    }
- 
-
-
-
-	/**
-	 * @return the role
-	 */
-	public String getRole() {
-		return role;
+		this.password = password;
 	}
-
-	/**
-	 * @param role the role to set
-	 */
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-	/**
-	 * @return the salary
-	 */
-	public long getSalary() {
-		return salary;
-	}
-
-	/**
-	 * @param salary the salary to set
-	 */
-	public void setSalary(long salary) {
-		this.salary = salary;
-	}
-
 	/**
 	 * @return the email
 	 */
 	public String getEmail() {
 		return email;
 	}
-
 	/**
 	 * @param email the email to set
 	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 	/**
 	 * @return the mobile
 	 */
 	public String getMobile() {
 		return mobile;
 	}
-
-	
-
-	/**
-	 * @return the is_active
-	 */
-	public boolean isIs_active() {
-		return is_active;
-	}
-
-	/**
-	 * @param is_active the is_active to set
-	 */
-	public void setIs_active(boolean is_active) {
-		this.is_active = is_active;
-	}
-
 	/**
 	 * @param mobile the mobile to set
 	 */
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
+	/**
+	 * @return the is_active
+	 */
+	public boolean isIs_active() {
+		return is_active;
+	}
+	/**
+	 * @param is_active the is_active to set
+	 */
+	public void setIs_active(boolean is_active) {
+		this.is_active = is_active;
+	}
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+	/**
+	 * @return the fullName
+	 */
+	public String getFullName() {
+		return fullName;
+	}
+	/**
+	 * @param fullName the fullName to set
+	 */
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	/**
+	 * @return the dob
+	 */
+	public long getDob() {
+		return dob;
+	}
+	/**
+	 * @param dob the dob to set
+	 */
+	public void setDob(long dob) {
+		this.dob = dob;
+	}
+	    
+	    
+ 
    
     
 }

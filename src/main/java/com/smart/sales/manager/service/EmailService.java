@@ -40,6 +40,8 @@ public class EmailService {
 
             emailSender.send(message);
         } catch (Exception e){
+        	e.fillInStackTrace();
+        	e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

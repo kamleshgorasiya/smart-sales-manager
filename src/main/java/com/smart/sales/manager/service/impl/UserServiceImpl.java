@@ -33,13 +33,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	private BCryptPasswordEncoder bcryptEncoder;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username)  {
 		User user = userRepository.findByUsername(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
-	//	if(!user.isIs_active())
-		//	throw new UsernameNotFoundException("Your account is still now activated.");
+		
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				user.isIs_active(),true,true,!user.isDeleted(), getAuthority(user));
 	}
@@ -54,14 +53,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		// return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
 	}
 
-	public List<User> findAll(int page, String order, String field) {
-		Sort sort = null;
-		if (order.equalsIgnoreCase("DESC")) {
-			sort = new Sort(Direction.DESC, field);
-		} else {
-			sort = new Sort(Direction.ASC, field);
-		}
-		PageRequest request = PageRequest.of(page - 1, Constants.PAGESIZE, sort);
+	public List<User> findAll(PageRequest request) {
+	
 		List<User> list = new ArrayList<>();
 		userRepository.findAll(request).iterator().forEachRemaining(list::add);
 		return list;
@@ -86,15 +79,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public User saveAdmin(UserDto user) {
 		User newUser = new User();
 		newUser.setUsername(user.getUsername());
-		newUser.setFirstName(user.getFirstName());
-		newUser.setLastName(user.getLastName());
+		newUser.setFullName(user.getFullName());
 		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-		newUser.setAge(user.getAge());
+		newUser.setDob(user.getDob());
 		List<Role> userRoleList = new ArrayList<Role>();
 		Role userRole = roleRepository.findByName("ADMIN");
 		userRoleList.add(userRole);
 		newUser.setRoles(userRoleList);
-		newUser.setSalary(user.getSalary());
 		newUser.setEmail(user.getEmail());
 		newUser.setMobile(user.getMobile());
 		return userRepository.save(newUser);
@@ -103,16 +94,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public User save(UserDto user) {
 		User newUser = new User();
-		newUser.setUsername(user.getUsername());
-		newUser.setFirstName(user.getFirstName());
-		newUser.setLastName(user.getLastName());
+	
+		newUser.setUsername(user.getEmail());		
+		newUser.setFullName(user.getFullName());
 		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-		newUser.setAge(user.getAge());
+		newUser.setDob(user.getDob());
 		List<Role> userRoleList = new ArrayList<Role>();
 		Role userRole = roleRepository.findByName("USER");
 		userRoleList.add(userRole);
-		newUser.setRoles(userRoleList);
-		newUser.setSalary(user.getSalary());
+		newUser.setRoles(userRoleList);		
 		newUser.setEmail(user.getEmail());
 		newUser.setMobile(user.getMobile());
 		return userRepository.save(newUser);
@@ -121,16 +111,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public User saveUser(UserDto user) {
 		User newUser = new User();
-		newUser.setUsername(user.getUsername());
-		newUser.setFirstName(user.getFirstName());
-		newUser.setLastName(user.getLastName());
+		newUser.setUsername(user.getEmail());
+		newUser.setFullName(user.getFullName());	
 		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-		newUser.setAge(user.getAge());
+		newUser.setDob(user.getDob());
 		List<Role> userRoleList = new ArrayList<Role>();
 		Role userRole = roleRepository.findByName(user.getRole());
 		userRoleList.add(userRole);
 		newUser.setRoles(userRoleList);
-		newUser.setSalary(user.getSalary());
+	
 		newUser.setEmail(user.getEmail());
 		newUser.setMobile(user.getMobile());
 		return userRepository.save(newUser);

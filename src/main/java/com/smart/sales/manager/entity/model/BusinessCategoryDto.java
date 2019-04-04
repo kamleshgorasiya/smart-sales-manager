@@ -30,54 +30,34 @@ import java.util.Date;
 import java.util.List;
 
 
-@Entity
-public class BusinessCategory {
 
-	@Column()
+/**
+ * @author om
+ *
+ */
+public class BusinessCategoryDto {
+
+	
 	@JsonIgnore
 	private boolean is_active;
 	
 	
-	@Column
+	
 	@JsonIgnore
 	private long created;
 	
-	@Column
+	
 	@JsonIgnore
 	private long updated;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
  
 	@Column(unique = true,length=64, nullable=false)
 	@Size(min = 2, max = 64, message="length.twoto64")
 	@NotNull(message = "notempty")
 	private String categoryName;	
-	
-	@Column
-	private long parentId;
-	
-	
 
-	
-//	@ManyToOne
-//	@JoinColumn(name="parentId",columnDefinition = "bigint(20) default 0")
-//	@JsonIgnore
-//	private BusinessCategory businessCategory;
-//	
-//	
-//	@OneToMany(mappedBy="businessCategory",cascade=CascadeType.ALL)
-//	private List<BusinessCategory> businessCategories=new ArrayList<>();
-		
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}	
+	private long parentId=0;
 
 	/**
 	 * @return the is_active
@@ -91,7 +71,8 @@ public class BusinessCategory {
 	 */
 	public void setIs_active(boolean is_active) {
 		this.is_active = is_active;
-	}	
+	}
+
 
 	/**
 	 * @return the created
@@ -100,6 +81,12 @@ public class BusinessCategory {
 		return created;
 	}
 
+	/**
+	 * @param created the created to set
+	 */
+	public void setCreated(long created) {
+		this.created = created;
+	}
 
 	/**
 	 * @return the updated
@@ -108,7 +95,12 @@ public class BusinessCategory {
 		return updated;
 	}
 
-	
+	/**
+	 * @param updated the updated to set
+	 */
+	public void setUpdated(long updated) {
+		this.updated = updated;
+	}
 	@PrePersist
 	protected void onCreate() {
 		created=new Date().getTime();
@@ -118,6 +110,20 @@ public class BusinessCategory {
 	@PreUpdate
 	protected void onUpdate() {
 		updated = new Date().getTime();
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	/**
@@ -134,24 +140,6 @@ public class BusinessCategory {
 		this.categoryName = categoryName;
 	}
 
-	
-
-	
-
-	/**
-	 * @param created the created to set
-	 */
-	public void setCreated(long created) {
-		this.created = created;
-	}
-
-	/**
-	 * @param updated the updated to set
-	 */
-	public void setUpdated(long updated) {
-		this.updated = updated;
-	}
-
 	/**
 	 * @return the parentId
 	 */
@@ -166,7 +154,15 @@ public class BusinessCategory {
 		this.parentId = parentId;
 	}
 
-
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BusinessCategoryDto [is_active=" + is_active + ", created=" + created + ", updated=" + updated + ", id="
+				+ id + ", categoryName=" + categoryName + ", parentId=" + parentId + "]";
+	}
+	
 	
 	
 }

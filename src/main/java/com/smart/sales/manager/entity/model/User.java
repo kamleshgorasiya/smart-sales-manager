@@ -16,9 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -29,7 +26,6 @@ import java.util.List;
 
 @Entity
 public class User {
-
 	
 
 	@Id
@@ -37,15 +33,18 @@ public class User {
 	private long id; 
 	
 	@Column(length=50, nullable=false)
-    @Size(min = 2, max = 64, message="length.twoto64")
+    @Size(min = 2, max = 128, message="length.eightto128")
 	@NotNull(message = "notempty")
-	private String firstName;
+	private String fullName;
 	
 	
-    @Size(min = 2, max = 64, message="length.twoto64")
-	@Column(length=50, nullable=false)
-    @NotNull(message = "notempty")
-	private String lastName;
+	/*
+	 * @Size(min = 2, max = 64, message="length.twoto64")
+	 * 
+	 * @Column(length=50, nullable=false)
+	 * 
+	 * private String lastName;
+	 */
 	
  
 	@Column(unique = true,length=64, nullable=false)
@@ -55,14 +54,13 @@ public class User {
 	
 	@Column(unique = true,length=64, nullable=false)
 	@Size(min = 1, max = 64, message="length.twoto64")
-	@NotEmpty(message = "notempty")
+	@NotNull(message = "notempty")
 	@Email(message = "valid.format")
 	private String email;
 	
 	@Column(unique = true,length=14, nullable=false)
 	@Size(min = 8, max = 14, message="length.eightto14")
-	@NotNull(message = "notempty")
-	
+	@NotNull(message = "notempty")	
 	private String mobile;
 	
 	
@@ -72,27 +70,35 @@ public class User {
 	@NotNull(message = "notempty")
 	private String password;
 	
-	@Column(length=50, nullable=false)
-	@Min(value = 15000, message = "min.salary")
-	@Max(value = 100000, message = "max.salary")
-	@NotNull(message = "notempty")
+	@Column(length=20)
+	/*
+	 * @Min(value = 15000, message = "min.salary")
+	 * 
+	 * @Max(value = 100000, message = "max.salary")
+	 */
 	private long salary;
 	
-	@Column(length=50, nullable=false)
-	@Min(value = 18, message = "min.age")
-	@Max(value = 100, message = "max.age")
-	@NotNull(message = "notempty")
-	private int age;
+	@Column(length=20)
+	private long dob;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_ROLES", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "ROLE_ID") })
 	@JsonIgnore
 	private List<Role> roles;
-
 	
+	@Column(length=20)
+	private long business_id;
+	 
+	@Column
+	private boolean isEmployee;
+
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<Address> addresses=new ArrayList<>();
+	
+
+	
+
 
 	/**
 	 * @return the addresses
@@ -150,38 +156,27 @@ public class User {
 	}
 
 	/**
-	 * @return the firstName
-	 */
-	public String getFirstName() {
-		return firstName;
-	}
-
-	/**
-	 * @param firstName the firstName to set
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
-
-	/**
-	 * @param lastName the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+	
 
 	/**
 	 * @return the username
 	 */
 	public String getUsername() {
 		return username;
+	}
+
+	/**
+	 * @return the fullName
+	 */
+	public String getFullName() {
+		return fullName;
+	}
+
+	/**
+	 * @param fullName the fullName to set
+	 */
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	/**
@@ -247,18 +242,48 @@ public class User {
 		this.salary = salary;
 	}
 
+	
+
 	/**
-	 * @return the age
+	 * @return the dob
 	 */
-	public int getAge() {
-		return age;
+	public long getDob() {
+		return dob;
 	}
 
 	/**
-	 * @param age the age to set
+	 * @param dob the dob to set
 	 */
-	public void setAge(int age) {
-		this.age = age;
+	public void setDob(long dob) {
+		this.dob = dob;
+	}
+
+	/**
+	 * @return the business_id
+	 */
+	public long getBusiness_id() {
+		return business_id;
+	}
+
+	/**
+	 * @param business_id the business_id to set
+	 */
+	public void setBusiness_id(long business_id) {
+		this.business_id = business_id;
+	}
+
+	/**
+	 * @return the isEmployee
+	 */
+	public boolean isEmployee() {
+		return isEmployee;
+	}
+
+	/**
+	 * @param isEmployee the isEmployee to set
+	 */
+	public void setEmployee(boolean isEmployee) {
+		this.isEmployee = isEmployee;
 	}
 
 	/**
@@ -369,5 +394,7 @@ public class User {
 	protected void onUpdate() {
 		updated = new Date().getTime();
 	}
+
+	
 	
 }

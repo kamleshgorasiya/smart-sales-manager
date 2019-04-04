@@ -1,5 +1,7 @@
 package com.smart.sales.manager.controller;
 
+
+
 import java.util.Date;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -8,14 +10,18 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +30,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.smart.sales.manager.exception.model.ResourceNotFoundException;
 import com.smart.sales.manager.response.model.ErrorDetails;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 
 @ControllerAdvice
@@ -104,19 +112,27 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 	
-	@ExceptionHandler(BadCredentialsException.class)
-	public final ResponseEntity<ErrorDetails> handleBadCredentails(BadCredentialsException ex, WebRequest request) {
-		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false),HttpStatus.UNAUTHORIZED.value());
-		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("unauthorised.access",null, request.getLocale()),ex.getMessage(),HttpStatus.UNAUTHORIZED.value());
-		return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
-	}
+	
+	  @ExceptionHandler(BadCredentialsException.class) public final
+	  ResponseEntity<ErrorDetails> handleBadCredentails(BadCredentialsException ex,  WebRequest request) 
+	  {  
+		  ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("unauthorised.access",null,request.getLocale()),ex.getMessage(),HttpStatus.UNAUTHORIZED.value()); 
+		  return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED); 
+	  }
+	 
 	@ExceptionHandler(AccessDeniedException.class)
 	public final ResponseEntity<ErrorDetails> handleRestAccessDeniedException(AccessDeniedException ex, WebRequest request) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("access.denied",null, request.getLocale()),ex.getMessage(),HttpStatus.NOT_FOUND.value());
 		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"You are not authorize to access these resources",HttpStatus.FORBIDDEN.value());
 		return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
 	}
-	
+	@ExceptionHandler(ExpiredJwtException.class)
+	public final ResponseEntity<ErrorDetails> handleRestExpiredJwtException(ExpiredJwtException ex, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(),messageSource.getMessage("token.expired",null, request.getLocale()),ex.getMessage(),HttpStatus.GATEWAY_TIMEOUT.value());
+		//ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),"You are not authorize to access these resources",HttpStatus.FORBIDDEN.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.GATEWAY_TIMEOUT);
+	}
+
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex, WebRequest request) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
@@ -133,6 +149,19 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
  
         return processFieldErrors(fieldErrors);
     } */
+	
+	@Override
+	public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+	    String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+	                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
+	                 .findFirst()
+	                 .orElse(ex.getMessage());
+	    ErrorDetails errorDetails = new ErrorDetails(new Date(),errorMessage,messageSource.getMessage("constraint.exception",null, request.getLocale()),HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	    
+	  }
+
+	 
     
 	
 }

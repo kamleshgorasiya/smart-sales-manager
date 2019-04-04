@@ -39,11 +39,9 @@ public class Address {
 	private boolean isDeleted;
 	
 	@Column
-	@JsonIgnore
 	private long created;
 	
 	@Column
-	@JsonIgnore
 	private long updated;
 	
 	
@@ -68,6 +66,20 @@ public class Address {
 	@NotEmpty(message = "notempty")
 	private String city;
 	
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Column(length=28, nullable=false)
 	@Size(min = 1, max = 28, message="length.oneto28")
 	@NotEmpty(message = "notempty")

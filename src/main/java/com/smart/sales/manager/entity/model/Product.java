@@ -1,12 +1,17 @@
 package com.smart.sales.manager.entity.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -16,10 +21,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
-public class Bookable {
+public class Product {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +47,7 @@ public class Bookable {
 	
 	@Column	
 	private boolean isActive;
-	
-	@Column
-	private boolean isAllowToBookAppointment;	
+
 	
 	@Column
 	private boolean isAllowAdvanceBooking;	
@@ -64,7 +68,6 @@ public class Bookable {
 	@ManyToOne
 	@JoinColumn(name="business_id")
 	@NotNull(message="notempty")
-	@JsonIgnore
 	private Business business;
 	
 	@Column	
@@ -76,12 +79,14 @@ public class Bookable {
 	private int approxTime;
 	
 	@Column
-	@JsonIgnore
 	private long created;
 	
 	@Column
-	@JsonIgnore
 	private long updated;
+	
+	
+	@Column
+	private boolean isService;
 
 
 	public long getId() {
@@ -90,6 +95,20 @@ public class Bookable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the approxTime
+	 */
+	public int getApproxTime() {
+		return approxTime;
+	}
+
+	/**
+	 * @param approxTime the approxTime to set
+	 */
+	public void setApproxTime(int approxTime) {
+		this.approxTime = approxTime;
 	}
 
 	/**
@@ -149,20 +168,6 @@ public class Bookable {
 	}
 
 	
-
-	/**
-	 * @return the isAllowToBookAppointment
-	 */
-	public boolean isAllowToBookAppointment() {
-		return isAllowToBookAppointment;
-	}
-
-	/**
-	 * @param isAllowToBookAppointment the isAllowToBookAppointment to set
-	 */
-	public void setAllowToBookAppointment(boolean isAllowToBookAppointment) {
-		this.isAllowToBookAppointment = isAllowToBookAppointment;
-	}
 
 	/**
 	 * @return the isAllowAdvanceBooking
@@ -286,5 +291,20 @@ public class Bookable {
 	protected void onUpdate() {
 		updated = new Date().getTime();
 	}
+
+	/**
+	 * @return the isService
+	 */
+	public boolean isService() {
+		return isService;
+	}
+
+	/**
+	 * @param isService the isService to set
+	 */
+	public void setService(boolean isService) {
+		this.isService = isService;
+	}
+	
 
 }

@@ -6,26 +6,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.smart.sales.manager.entity.model.Business;
-import com.smart.sales.manager.entity.model.Role;
-import com.smart.sales.manager.entity.model.User;
 import com.smart.sales.manager.exception.model.CustomAuthenticationException;
 import com.smart.sales.manager.repository.BusinessRepository;
-import com.smart.sales.manager.repository.RoleRepository;
-import com.smart.sales.manager.repository.UserRepository;
 import com.smart.sales.manager.request.model.Constants;
-import com.smart.sales.manager.request.model.UserDto;
 import com.smart.sales.manager.service.BusinessService;
-import com.smart.sales.manager.service.UserService;
-
-import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service(value = "businessService")
@@ -61,8 +49,8 @@ public class BusinessServiceImpl implements BusinessService {
 
 	
 	@Override
-	public void deleteByIdAndOwner(long id,String owner) {
-		businessRepository.updateIsDeleted(true,id,owner);
+	public void deleteByIdAndOwnerId(long id,String owner_name,boolean isDeleted) {
+		businessRepository.updateIsDeleted(isDeleted,new Date().getTime(),id,owner_name);
 	}
 	
 	@Override
@@ -82,22 +70,37 @@ public class BusinessServiceImpl implements BusinessService {
 	@Override
 	public Business update(Business business, String ownerName, Locale locale) {
 		System.out.println(business.toString());
-		
-		
-		Business businessDbo = findById(business.getId());
-		System.out.println(businessDbo.toString());
-		if (businessDbo != null&&businessDbo.getOwner().equals(ownerName)&&business.getOwner().equals(ownerName)) {
-			BeanUtils.copyProperties(business, businessDbo, "isActive", "username", "id", "email", "mobile","created","updated");
-			
-			return businessRepository.save(businessDbo);
+	
+		if (business != null&&business.getOwnerId()>0&&business.getId()>0) {
+			businessRepository.update(business, business.getId(), business.getOwnerId(),business.getBusinessCategory().getId(),ownerName);
+			return businessRepository.findById(business.getId()).get();
 		}
 		else {
-			String args[]= {"Business details"};
+			//String args[]= {"Business details"};
+			String[] args= {messageSource.getMessage("business.details",null , locale)};
 			String message = messageSource.getMessage("entity.updated.error", args, locale);
 			throw new CustomAuthenticationException(message);
 		}
 		
 	}
+	
+	@Override
+	public Business updateBusinessOnOff(long id, boolean status, String ownerName, Locale locale) {
+			Business business=businessRepository.findById(id).get();
+		if (business != null&&business.getOwnerId()>0&&business.getId()>0) {
+			businessRepository.updateBusinessOnOff(id,status,ownerName, new Date().getTime());		
+			business.setIsOn(status);
+			return business;
+		}
+		else {
+			//String args[]= {"Business details"};
+			String[] args= {messageSource.getMessage("business.status",null , locale)};
+			String message = messageSource.getMessage("entity.updated.error", args, locale);
+			throw new CustomAuthenticationException(message);
+		}
+		
+	}
+
 	@Override
 	public Business update(Business business) {
 		System.out.println(business.toString());		
@@ -142,17 +145,16 @@ public class BusinessServiceImpl implements BusinessService {
 	}
 
 	@Override
-	public List<Business> findByOwner(String ownerId) {
-		Sort sort = new Sort(Direction.ASC, "id");		
-		PageRequest request = PageRequest.of(0, Constants.PAGESIZE, sort);
+	public List<Business> findByOwner(String ownerName) {
+	
 		List<Business> list = new ArrayList<>();
-		businessRepository.findByOwner(ownerId,request).iterator().forEachRemaining(list::add);
+		businessRepository.findByOwnerName(ownerName).iterator().forEachRemaining(list::add);
 		return list;
 	}
 
 	@Override
-	public Business findByIdAndOwner(long id, String owner) {
-		return businessRepository.findByIdAndOwner(id,owner);
+	public Business findByIdAndOwner(long id, long owner) {
+		return businessRepository.findByIdAndOwnerId(id,owner);
 	}
 
 	
