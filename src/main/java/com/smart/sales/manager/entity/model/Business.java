@@ -131,19 +131,15 @@ public class Business {
 	private String address;
 	
 	@Column(length=28)
-	@Size(min = 1, max = 28, message="length.oneto28")
 	private String city;
 	
 	@Column(length=28)
-	@Size(min = 1, max = 28, message="length.oneto28")
 	private String state;
 	
 	@Column(length=28)
-	@Size(min = 1, max = 28, message="length.oneto28")
 	private String country;
 	
-	@Column(length=8)
-	@Size(min = 5, max = 8, message="length.fiveto8")
+	@Column(length=28)
 	private String zipcode;
 
 	@OneToMany(mappedBy="business",cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
